@@ -1,0 +1,290 @@
+body{
+    margin: 0px;
+    padding: 0px;
+    background-color: #5aabc6;
+    user-select: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+
+    overflow: hidden;
+}
+
+#pushDown{
+    display:none;
+}
+
+#feedback{
+    position: fixed;
+    /* display: none; */
+    z-index:500000;
+    color:aliceblue;
+    background-color: rgb(28, 42, 48);
+}
+
+#mixer{
+    display:none;
+}
+
+@font-face{
+    font-family: 'Gotham';
+    src: url('src/fonts/Rajdhani-Medium.ttf');
+    
+}
+
+@font-face{
+    font-family: 'Megapunch';
+    src: url('src/fonts/MegapunchItalic.otf');
+    
+}
+
+@font-face{
+    font-family: 'Ultra';
+    src: url('src/fonts/Gotham-UltraItalic.otf');
+    
+}
+
+#useFont{
+    font-family: 'Gotham';
+    font-size: 0pt;
+}
+
+#loadingImage{
+    position: fixed;
+    width: 237px;
+    height: 46px;
+
+    font-family: 'Gotham';
+    color: #ffffff;
+    font-size: 15pt;
+    text-align: center;
+    
+    letter-spacing: 2px;
+    top:0;
+    bottom:0;
+    left: 0;
+    right: 0;
+    margin:auto;
+    z-index: 11000;
+
+    image-rendering: smooth ;
+    pointer-events: none;
+}
+
+#winText{
+    position: fixed;
+    width: 100%;
+    height: 46px;
+
+    font-family: 'Megapunch';
+    color: #ffffff;
+    font-size: 115pt;
+    text-align: center;
+    
+    letter-spacing: 8px;
+    top:15%;
+    /* bottom:0; */
+    left: 0;
+    right: 0;
+    margin:auto;
+    z-index: 11000;
+
+    image-rendering: smooth ;
+    pointer-events: none;
+    opacity: 0;
+    /* border: 1px solid red; */
+}
+
+#loadingBack{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index:10000;
+    background-color: rgb(184, 234, 255);
+    pointer-events: none;
+    /* display: none; */
+}
+
+#mycanvas{
+    /* border: 1px solid red; */
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index:5;
+    /* display: none; */
+}
+
+#score{
+    position: absolute;
+    top: 14px;
+    right: 20px;
+    z-index: 20;
+    font-size: 16pt;
+    color: white;
+    font-family: 'Gotham';
+}
+
+#betSlider{
+    position: absolute;
+    bottom: 20px;
+    width: 25%;
+    max-width: 600px;
+    height: 3px;
+    z-index: 20;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    /* background-color: #ff0000; */
+}
+
+#betDiv{
+    position: absolute;
+    width: 30%;
+    bottom: 28px;
+    z-index: 20;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    /* border: 2px solid red; */
+    
+}
+
+.inner-divs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16pt;
+    color: #cd4f32;
+    font-family: 'Gotham';
+    /* border: 2px solid red; */
+}
+
+.inner-divs > div {
+    flex: 1;
+    /* border: 1px solid black; */
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* controls */
+
+#controlContainer {
+    position: absolute;
+    width: 250px;
+    height: 100px;
+    background-color: #2f3238;
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); */
+    /* border: 2px #576964 solid; */
+    border-radius: 10px;
+    overflow: hidden; /* To hide overflow from child divs with rounded corners */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    top: 100px;
+    left: -30px;
+    z-index: 10;
+  }
+  
+  .top, .bottom {
+    width: 100%;
+    padding-left: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* border: 1px solid red; */
+    font-family: "Gotham";
+    font-size: 12pt;
+    color: #f07458;
+  }
+  
+  .text {
+    margin-top: 12px;
+    /* margin-bottom: 5px; */
+    text-align: center;
+    /* border: 1px solid blue; */
+  }
+  
+  .slider-container {
+    /* margin-bottom: 10px; */
+    display: flex;
+    justify-content: center;
+    /* border: 1px solid blue; */
+  }
+
+  .red-box {
+    width: 150px;
+    height: 3px;
+    background-color: #cccccc;
+    margin: 0 auto;
+    margin-bottom: 18px;
+    margin-top: 3px;
+  }
+
+  #powerMeter{
+    background-color: red;
+    width: 100px;
+    height: 3px;
+  }
+
+  .slider {
+    width: calc(150px);
+    height: 3px;
+    margin-top: 3px;
+    /* border: 1px solid blue; */
+  }
+  
+  /* ---------------------- */
+ 
+  #cannonAngle[type='range'] {
+    overflow: hidden;
+    width: 150px;
+    -webkit-appearance: none;
+    background-color: #cccccc;
+  }
+  
+  #cannonAngle[type='range']::-webkit-slider-runnable-track {
+    height: 10px;
+    -webkit-appearance: none;
+    color: #ff0000;
+    margin-top: -1px;
+  }
+  
+  #cannonAngle[type='range']::-webkit-slider-thumb {
+    width: 10px;
+    -webkit-appearance: none;
+    height: 10px;
+    cursor: ew-resize;
+    background: #f07458;
+    box-shadow: -80px 0 0 80px #ff0000;
+  }
+
+  /* ---------------------- */
+ 
+  #betSlider[type='range'] {
+    overflow: hidden;
+    /* width: 250px; */
+    -webkit-appearance: none;
+    background-color: #cccccc;
+  }
+  
+  /* #betSlider[type='range']::-webkit-slider-runnable-track {
+    height: 10px;
+    -webkit-appearance: none;
+    color: #ff0000;
+    margin-top: -1px;
+  } */
+  
+  #betSlider[type='range']::-webkit-slider-thumb {
+    width: 10px;
+    -webkit-appearance: none;
+    height: 10px;
+    cursor: ew-resize;
+    background: #f07458;
+    box-shadow: -180px 0 0 180px #ff0000;
+  }
