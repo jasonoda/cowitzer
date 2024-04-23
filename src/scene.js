@@ -115,7 +115,7 @@ export class Scene {
     // console.log(this.e.ui.t_landscape1.orig.height);
 
     this.landscape0 = new PIXI.TilingSprite(this.e.ui.t_landscape0);
-    this.landscape0.width=50000;
+    this.landscape0.width=120000;
     this.landscape0.height=this.e.ui.t_landscape0.orig.height;
     this.landscape0.position.y=125+groundOffset;
     this.landscape0.anchor.y=1;
@@ -124,7 +124,7 @@ export class Scene {
     this.backgroundCont.addChild(this.landscape0);
 
     this.fence = new PIXI.TilingSprite(this.e.ui.t_fence);
-    this.fence.width=50000;
+    this.fence.width=120000;
     this.fence.height=this.e.ui.t_fence.orig.height;
     this.fence.position.y=-125+groundOffset;
     this.fence.anchor.y=1;
@@ -133,7 +133,7 @@ export class Scene {
     this.backgroundCont.addChild(this.fence);
 
     this.landscape1 = new PIXI.TilingSprite(this.e.ui.t_landscape1);
-    this.landscape1.width=50000;
+    this.landscape1.width=120000;
     this.landscape1.height=this.e.ui.t_landscape1.orig.height;
     this.landscape1.position.y=-100+groundOffset;
     this.landscape1.anchor.y=1;
@@ -142,7 +142,7 @@ export class Scene {
     this.backgroundCont.addChild(this.landscape1);
 
     this.landscape2 = new PIXI.TilingSprite(this.e.ui.t_landscape2);
-    this.landscape2.width=50000;
+    this.landscape2.width=120000;
     this.landscape2.height=this.e.ui.t_landscape2.orig.height;
     this.landscape2.position.y=-50+groundOffset;
     this.landscape2.anchor.y=1;
@@ -151,7 +151,7 @@ export class Scene {
     this.backgroundCont.addChild(this.landscape2);
 
     this.landscape3 = new PIXI.TilingSprite(this.e.ui.t_landscape3);
-    this.landscape3.width=50000;
+    this.landscape3.width=120000;
     this.landscape3.height=this.e.ui.t_landscape3.orig.height;
     this.landscape3.position.y=-120+groundOffset;
     this.landscape3.anchor.y=1;
@@ -160,7 +160,7 @@ export class Scene {
     this.backgroundCont.addChild(this.landscape3);
 
     this.landscape4 = new PIXI.TilingSprite(this.e.ui.t_landscape4);
-    this.landscape4.width=50000;
+    this.landscape4.width=120000;
     this.landscape4.height=this.e.ui.t_landscape4.orig.height;
     this.landscape4.position.y=-180+groundOffset;
     this.landscape4.anchor.y=1;
@@ -169,7 +169,7 @@ export class Scene {
     this.backgroundCont.addChild(this.landscape4);
 
     this.landscape5 = new PIXI.TilingSprite(this.e.ui.t_landscape5);
-    this.landscape5.width=50000;
+    this.landscape5.width=120000;
     this.landscape5.height=this.e.ui.t_landscape5.orig.height;
     this.landscape5.position.y=-240+groundOffset;
     this.landscape5.anchor.y=1;
