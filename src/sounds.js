@@ -3,7 +3,7 @@ export class Sounds {
     setUp(e) {
 
         this.e=e;
-        this.soundArray = ["scroll", "barbedWire", "chicken", "chime", "exp1", "exp2", "exp3", "hitGround", "hitGroundOnce", "moo", "win", "cork"];
+        this.soundArray = ["scroll", "barbedWire", "chicken", "chime", "exp1", "exp2", "exp3", "hitGround", "hitGroundOnce", "moo", "win", "cork", "ghostPop"];
         this.loadedSounds = [];
 
         for(var i=0; i<this.soundArray.length; i++){

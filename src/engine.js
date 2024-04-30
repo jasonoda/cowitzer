@@ -60,6 +60,10 @@ export class Engine {
         }
         this.lastTime = currentTime;
 
+        if(this.dt>.05){
+            console.log(">>>>LAG")
+        }
+
         //---touch & tester--------------------------------------------------------------------------------------------------------------
 
         if(this.mobile===true){
@@ -87,7 +91,7 @@ export class Engine {
 
             // document.getElementById("feedback").innerHTML = this.action+" / "+this.scene.action+" / "+this.scene.winResult+" / "+Math.round(this.scene.winRoll)+" / "+Math.round(this.scene.winChance);
             // document.getElementById("feedback").innerHTML = this.action+" / "+this.scene.action+" / "+this.scene.winResult+" / "+Math.round(this.scene.xspeed)+" / "+Math.round(this.scene.yspeed);
-            document.getElementById("feedback").innerHTML = "game result will be: "+this.scene.winResult;
+            document.getElementById("feedback").innerHTML = "game result will be: "+this.scene.goalMult;
 
         }
 

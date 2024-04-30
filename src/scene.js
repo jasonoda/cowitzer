@@ -17,6 +17,7 @@ export class Scene {
     this.winChance=0;
     this.goalDistance=0;
     this.hasWon=false;
+    this.mirrorEndYellow=true;
     
     this.props=[];
     this.props2=[];
@@ -29,6 +30,14 @@ export class Scene {
     this.makeKillerCount=0;
     this.lerpPlayerBody=false
     this.didBounce=false;
+    this.hitGroundCount=0;
+
+    this.chickenArray=[];
+
+    this.moveMode=false;
+    this.moveModeDist=0;
+
+    this.endPoint=.67;
 
     window.addEventListener('click', (event) => {
       
@@ -53,6 +62,16 @@ export class Scene {
     this.baseCont = new PIXI.Container();
     this.baseCont.sortableChildren = true;
     this.e.ui.app.stage.addChild(this.baseCont);
+
+    this.mask = new PIXI.Sprite(this.e.ui.t_red);
+    this.mask.width=1970;
+    this.mask.height=1970;
+    this.mask.anchor.y=1;
+    this.mask.alpha=1;
+    this.mask._zIndex=2111;
+    this.e.ui.app.stage.addChild(this.mask);
+
+    this.baseCont.mask=this.mask;
 
     //
 
@@ -79,7 +98,7 @@ export class Scene {
 
     //   this.tester = new PIXI.Sprite(this.e.ui.t_white);
     //   this.tester.width=10;
-    //   this.tester.height=10;
+    //   this.tester.height=210;
     //   this.tester.anchor.y=1;
     //   this.tester.position.x=i*500;
     //   this.tester._zIndex=2;
@@ -91,16 +110,16 @@ export class Scene {
 
     //
 
-    this.ground = new PIXI.Sprite(this.e.ui.t_green);
-    this.ground.width=500000;
+    this.ground = new PIXI.Sprite(this.e.ui.t_red);
+    this.ground.width=50000;
     this.ground.height=this.groundLevel;
     this.ground.anchor.y=1;
     this.ground.alpha=0;
     this.ground._zIndex=2;
     this.levCont.addChild(this.ground);
 
-    this.ground2 = new PIXI.Sprite(this.e.ui.t_barbedWire);
-    this.ground2.width=500000;
+    this.ground2 = new PIXI.Sprite(this.e.ui.t_red);
+    this.ground2.width=50000;
     this.ground2.height=this.groundLevel;
     this.ground2.anchor.y=1;
     this.ground2.alpha=.3;
@@ -114,8 +133,10 @@ export class Scene {
 
     // console.log(this.e.ui.t_landscape1.orig.height);
 
+    this.lsLength = 100000
+
     this.landscape0 = new PIXI.TilingSprite(this.e.ui.t_landscape0);
-    this.landscape0.width=120000;
+    this.landscape0.width=this.lsLength;
     this.landscape0.height=this.e.ui.t_landscape0.orig.height;
     this.landscape0.position.y=125+groundOffset;
     this.landscape0.anchor.y=1;
@@ -124,7 +145,7 @@ export class Scene {
     this.backgroundCont.addChild(this.landscape0);
 
     this.fence = new PIXI.TilingSprite(this.e.ui.t_fence);
-    this.fence.width=120000;
+    this.fence.width=this.lsLength;
     this.fence.height=this.e.ui.t_fence.orig.height;
     this.fence.position.y=-125+groundOffset;
     this.fence.anchor.y=1;
@@ -133,7 +154,7 @@ export class Scene {
     this.backgroundCont.addChild(this.fence);
 
     this.landscape1 = new PIXI.TilingSprite(this.e.ui.t_landscape1);
-    this.landscape1.width=120000;
+    this.landscape1.width=this.lsLength;
     this.landscape1.height=this.e.ui.t_landscape1.orig.height;
     this.landscape1.position.y=-100+groundOffset;
     this.landscape1.anchor.y=1;
@@ -142,7 +163,7 @@ export class Scene {
     this.backgroundCont.addChild(this.landscape1);
 
     this.landscape2 = new PIXI.TilingSprite(this.e.ui.t_landscape2);
-    this.landscape2.width=120000;
+    this.landscape2.width=this.lsLength;
     this.landscape2.height=this.e.ui.t_landscape2.orig.height;
     this.landscape2.position.y=-50+groundOffset;
     this.landscape2.anchor.y=1;
@@ -151,7 +172,7 @@ export class Scene {
     this.backgroundCont.addChild(this.landscape2);
 
     this.landscape3 = new PIXI.TilingSprite(this.e.ui.t_landscape3);
-    this.landscape3.width=120000;
+    this.landscape3.width=this.lsLength;
     this.landscape3.height=this.e.ui.t_landscape3.orig.height;
     this.landscape3.position.y=-120+groundOffset;
     this.landscape3.anchor.y=1;
@@ -160,7 +181,7 @@ export class Scene {
     this.backgroundCont.addChild(this.landscape3);
 
     this.landscape4 = new PIXI.TilingSprite(this.e.ui.t_landscape4);
-    this.landscape4.width=120000;
+    this.landscape4.width=this.lsLength;
     this.landscape4.height=this.e.ui.t_landscape4.orig.height;
     this.landscape4.position.y=-180+groundOffset;
     this.landscape4.anchor.y=1;
@@ -169,7 +190,7 @@ export class Scene {
     this.backgroundCont.addChild(this.landscape4);
 
     this.landscape5 = new PIXI.TilingSprite(this.e.ui.t_landscape5);
-    this.landscape5.width=120000;
+    this.landscape5.width=this.lsLength;
     this.landscape5.height=this.e.ui.t_landscape5.orig.height;
     this.landscape5.position.y=-240+groundOffset;
     this.landscape5.anchor.y=1;
@@ -298,6 +319,15 @@ export class Scene {
 
     //----
 
+    this.playerAngel = new PIXI.Sprite(this.e.ui.t_cowAngel);
+    this.playerAngel.scale.x=.5;
+    this.playerAngel.scale.y=.5;
+    this.playerAngel.anchor.x=.5;
+    this.playerAngel.anchor.y=.5;
+    this.playerAngel.alpha=0;
+    this.playerAngel._zIndex=135;
+    this.levCont.addChild(this.playerAngel);
+
     this.playerCont = new PIXI.Container();
     this.playerCont.sortableChildren = true;
     this.levCont.addChild(this.playerCont);
@@ -362,12 +392,20 @@ export class Scene {
     this.baseCont.addChild(this.resetButton);
 
     this.finishLine = new PIXI.Sprite(this.e.ui.t_finishLine);
-    this.finishLine.anchor.x=.5;
+    this.finishLine.anchor.x=0;
     this.finishLine.anchor.y=1;
     this.finishLine._zIndex=5;
     this.finishLine.position.x=200;
     this.finishLine.position.y=-this.groundLevel;
-    this.backgroundCont.addChild(this.finishLine);
+    // this.backgroundCont.addChild(this.finishLine);
+
+    this.finishLine2 = new PIXI.Sprite(this.e.ui.t_finishLine);
+    this.finishLine2.anchor.x=0;
+    this.finishLine2.anchor.y=1;
+    this.finishLine2._zIndex=0;
+    this.finishLine2.position.x=this.goalDistance;
+    this.finishLine2.position.y=-this.groundLevel;
+    this.levCont2.addChild(this.finishLine2);
 
     this.explosion = new PIXI.Sprite(this.e.ui.t_red);
     this.explosion.anchor.x=.5;
@@ -394,12 +432,13 @@ export class Scene {
     this.bottomUI.anchor.y=1
     this.bottomUI.scale.x=.5
     this.bottomUI.scale.y=.5
+    this.bottomUI.alpha=0;
     this.bottomUI._zIndex=1000
     this.baseCont.addChild(this.bottomUI);
     
     this.resetButton.on('mousedown', (event) => {
 
-      console.log("reset button")
+      // console.log("reset button")
       this.action="reset";
       this.e.s.p("chime")
         
@@ -449,42 +488,111 @@ export class Scene {
 
   alignParts(){
 
-    this.vig.width = window.innerWidth;
-    this.vig.height = window.innerHeight;
+    this.finishLine.position.x =  this.levCont.position.x + this.goalDistance;
 
-    this.finishLine.position.x =  this.landscape0.position.x + this.goalDistance-200;
+    this.mask.position.y = window.innerHeight;
 
-    this.landscape0.position.x = this.e.u.lerp( this.landscape0.position.x, this.levCont.position.x, .5 );
-    this.fence.position.x = this.e.u.lerp( this.fence.position.x, this.levCont.position.x*.9, .5 );
-    this.landscape1.position.x = this.e.u.lerp( this.landscape1.position.x, this.levCont.position.x*.8, .5 );
-    this.landscape2.position.x = this.e.u.lerp( this.landscape2.position.x, this.levCont.position.x*.6, .5 );
-    this.landscape3.position.x = this.e.u.lerp( this.landscape3.position.x, this.levCont.position.x*.4, .5 );
-    this.landscape4.position.x = this.e.u.lerp( this.landscape4.position.x, this.levCont.position.x*.2, .5 );
-    this.landscape5.position.x = this.e.u.lerp( this.landscape5.position.x, this.levCont.position.x*.1, .5 );
+    // this.landscape0.position.x = this.e.u.lerp( this.landscape0.position.x, this.levCont.position.x, .5 );
+    // this.fence.position.x = this.e.u.lerp( this.fence.position.x, this.levCont.position.x*.9, .5 );
+    // this.landscape1.position.x = this.e.u.lerp( this.landscape1.position.x, this.levCont.position.x*.8, .5 );
+    // this.landscape2.position.x = this.e.u.lerp( this.landscape2.position.x, this.levCont.position.x*.6, .5 );
+    // this.landscape3.position.x = this.e.u.lerp( this.landscape3.position.x, this.levCont.position.x*.4, .5 );
+    // this.landscape4.position.x = this.e.u.lerp( this.landscape4.position.x, this.levCont.position.x*.2, .5 );
+    // this.landscape5.position.x = this.e.u.lerp( this.landscape5.position.x, this.levCont.position.x*.1, .5 );
 
-    if(this.lerpPlayerBody===true){
-      this.playerBody.position.x = this.e.u.lerp( this.playerBody.position.x, this.playerCont.position.x, .6 );
-      this.playerBody.position.y = this.e.u.lerp( this.playerBody.position.y, this.playerCont.position.y, .6 );
+    
+
+    // if(this.lerpPlayerBody===true){
+      // this.playerBody.position.x = this.e.u.lerp( this.playerBody.position.x, this.playerCont.position.x, .6 );
+      // this.playerBody.position.y = this.e.u.lerp( this.playerBody.position.y, this.playerCont.position.y, .6 );
+
+      this.playerBody.position.x = this.playerCont.position.x
+      this.playerBody.position.y = this.playerCont.position.y
+    // }
+
+    
+    if(this.e.mobile===true){
+
+      this.baseCont.scale.x = this.baseCont.scale.y = .5;
+
+      this.levCont.position.y = window.innerHeight*2;
+      this.levCont2.position.y = window.innerHeight*2;
+      this.backgroundCont.position.y = window.innerHeight*2;
+  
+      this.vig.width = window.innerWidth*2;
+      this.vig.height = window.innerHeight*2;
+      this.vig.alpha = .1;
+  
+      this.resetButton.position.x=window.innerWidth;
+      this.resetButton.position.y=(window.innerHeight)-100;
+
+      document.getElementById("winText").style.fontSize = "90pt"
+  
+    }else{
+
+      this.vig.width = window.innerWidth;
+      this.vig.height = window.innerHeight;
+      this.vig.alpha = .3;
+  
+      this.levCont.position.y = window.innerHeight;
+      this.levCont2.position.y = window.innerHeight;
+      this.backgroundCont.position.y = window.innerHeight;
+  
+      this.resetButton.position.x=window.innerWidth/2;
+      this.resetButton.position.y=(window.innerHeight/2)-100;
+  
+      document.getElementById("winText").style.fontSize = "115pt"
+  
     }
-   
-    this.levCont.position.y = window.innerHeight;
-    this.levCont2.position.y = window.innerHeight;
-    this.backgroundCont.position.y = window.innerHeight;
 
+   
     this.bottomUI.position.x = window.innerWidth/2;
     this.bottomUI.position.y = window.innerHeight;
 
-    if(this.playerCont.position.x<window.innerWidth/2){
+    if(this.playerCont.position.x<window.innerWidth/2 && this.moveMode===false){
 
       // hold in place
 
+      // console.log("hold in place")
+
     }else{
 
-      if(this.hasWon===false){
-        this.levCont.position.x = this.e.u.lerp( this.levCont.position.x, -this.playerCont.position.x + (window.innerWidth/2), .5 );
-      }
+      // if(this.hasWon===false){
+        // this.levCont.position.x = this.e.u.lerp( this.levCont.position.x, -this.playerCont.position.x + (window.innerWidth/2) - 200, .5 );
+
+        if(this.moveMode===true){
+
+          if(this.e.input.keyRight===true){
+
+            console.log(this.moveModeDist)
+
+            this.moveModeDist+=this.e.dt*800;
+
+            this.levCont.position.x = -this.moveModeDist
+            this.levCont2.position.x = -this.moveModeDist + 30
+
+          }
+
+        }else{
+
+          this.levCont.position.x = -this.playerCont.position.x + (window.innerWidth/2)
+
+          this.landscape0.position.x = this.levCont.position.x;
+          this.fence.position.x = this.levCont.position.x*.9
+          this.landscape1.position.x = this.levCont.position.x*.8
+          this.landscape2.position.x = this.levCont.position.x*.6
+          this.landscape3.position.x = this.levCont.position.x*.4
+          this.landscape4.position.x = this.levCont.position.x*.2
+          this.landscape5.position.x = this.levCont.position.x*.1
+  
+        }
+       
+      // }
       
     }
+
+    // console.log(this.playerCont.position.x)
+    // console.log(this.landscape0.position.x)
 
     if(this.playerCont2.position.x<window.innerWidth/2){
 
@@ -493,15 +601,13 @@ export class Scene {
     }else{
 
       if(this.hasWon===false){
-        this.levCont2.position.x = this.e.u.lerp( this.levCont2.position.x, -this.playerCont2.position.x + (window.innerWidth/2), .5 );
+        // this.levCont2.position.x = this.e.u.lerp( this.levCont2.position.x, -this.playerCont2.position.x + (window.innerWidth/2), .5 );
+        this.levCont2.position.x = -this.playerCont2.position.x + (window.innerWidth/2);
       }
       
       // this.levCont2.position.x = -this.playerCont2.position.x + (window.innerWidth/2)
 
     }
-
-    this.resetButton.position.x=window.innerWidth/2;
-    this.resetButton.position.y=(window.innerHeight/2)-100;
 
     // this.backgroundCont.position.x = window.innerWidth/2
 
@@ -509,7 +615,7 @@ export class Scene {
 
   createLevel(){
 
-    console.log("create new level")
+    console.log("-----------------------------")
 
     for(var i=0; i<this.props.length; i++){
 
@@ -573,9 +679,10 @@ export class Scene {
 
     }
 
-    this.tweenOb = new Object();
-    this.tweenOb.yellowHeight = -this.groundLevel;
-    gsap.to( this.tweenOb, { yellowHeight: -800,  duration: 1, repeat: -1, yoyo: true});
+    // this.tweenOb = new Object();
+    // this.tweenOb.yellowHeight = -this.groundLevel;
+    // gsap.to( this.tweenOb, { yellowHeight: -800,  duration: 1, repeat: -1, yoyo: true});
+
 
   }
 
@@ -712,16 +819,62 @@ export class Scene {
 
       }
 
+      if(command==="end red"){
+
+        if(i===0){
+          // console.log("end red")
+          this.endRed = this.prop;
+        }else{
+          // console.log("end red 2")
+          this.endRed2 = this.prop;
+        }
+        
+      }
+  
+      if(command==="end yellow"){
+      
+        if(i===0){
+          // console.log("end yellow")
+          this.endYellow = this.prop;
+        }else{
+          // console.log("end yellow 2")
+          this.endYellow2 = this.prop;
+        }
+
+      }
+
+      if(command==="win"){
+
+        this.prop.texture=this.e.ui.t_grenade;
+
+      }
+  
+    }
+
+    if(type==="yellow"){
+
+      this.prop.position.y = -150 - this.e.u.ran(600)
+      this.prop.moveSpeed = 200 + this.e.u.ran(600)
+
+      this.dirRan=this.e.u.ran(2);
+
+      if(this.dirRan===0){
+        this.prop.dir="up"
+      }else{
+        this.prop.dir="down"
+      }
+
     }
 
     if(type==="blue" || type==="purple"){
 
-      if(x<this.goalDistance*.66 && x>this.goalDistance*.2){
+      // if(x<this.goalDistance*.66 && x>this.goalDistance*.2){
+      if(x>2000){
 
         this.ranRocket = this.e.u.ran(100);
-        if(this.ranRocket<50){
+        if(this.ranRocket<30){
   
-          console.log("make rocket")
+          // console.log("make rocket")
   
           this.makeNewProp("green", x + this.e.u.nran(100), "build")
   
@@ -750,16 +903,16 @@ export class Scene {
 
   update(){
 
-    this.slider = document.getElementById("betSlider");
-    this.sliderVal = this.slider.value;
-    this.winChance = 100-this.sliderVal;
+    // this.slider = document.getElementById("betSlider");
+    // this.sliderVal = this.slider.value;
+    // this.winChance = 100-this.sliderVal;
 
-    this.winningsNumber = (100/this.winChance) * .99;
+    // this.winningsNumber = (100/this.winChance) * .99;
 
-    this.goalDistance = ((this.slider.value)*500)+5000
+    // this.goalDistance = ((this.slider.value)*500)+5000
 
-    document.getElementById("winnings").innerHTML = "WINNINGS: "+this.e.u.roundToFourDigits( this.winningsNumber );
-    document.getElementById("winChance").innerHTML = "WIN CHANCE: "+this.winChance;
+    // document.getElementById("winnings").innerHTML = "WINNINGS: "+this.e.u.roundToFourDigits( this.winningsNumber );
+    // document.getElementById("winChance").innerHTML = "WIN CHANCE: "+this.winChance;
 
     document.getElementById("controlContainer").style.top = ((window.innerHeight/3)-50)+"px";
     document.getElementById("powerMeter").style.width = (this.pmObject.power * 1.5)+"px";
@@ -767,7 +920,8 @@ export class Scene {
     if(this.levCont.position.x===0){
       document.getElementById("score").innerHTML = 0;
     }else{
-      document.getElementById("score").innerHTML = Math.round(this.score)+" / "+Math.round(this.goalDistance);
+      // document.getElementById("score").innerHTML = Math.round(this.score)+" / "+Math.round(this.goalDistance);
+      document.getElementById("score").innerHTML = this.scoreMult;
     }
     
 
@@ -797,6 +951,7 @@ export class Scene {
       this.winRoll=0;
       this.hasWon=false;
       this.winSoundOnce=true
+      this.mirrorEndYellow=true;
 
       document.getElementById("winText").style.opacity="0"
 
@@ -847,8 +1002,9 @@ export class Scene {
       gsap.to( this.pmObject, { power: 0,  duration: .25, repeat: -1, yoyo: true});
   
       this.score=0;
+      this.scoreMult=0;
 
-      document.getElementById("betSlider").style.pointerEvents="auto";
+      // document.getElementById("betSlider").style.pointerEvents="auto";
 
       for(var i=0; i<this.props.length; i++){
         this.props[i].alpha=1;
@@ -876,16 +1032,48 @@ export class Scene {
 
       // this.finishLine.position.x = this.goalDistance-200;
 
-      this.winRoll = this.e.u.getRandomDecimal(0,100,20);
-      if(this.winRoll<this.winChance){
-        this.winResult="win";
-      }else{
-        this.winResult="lose";
-      }
-      // this.winResult="win";
+      // this.winRoll = this.e.u.getRandomDecimal(0,100,20);
+      // if(this.winRoll<this.winChance){
+      //   this.winResult="win";
+      // }else{
+      //   this.winResult="lose";
+      // }
+      this.winResult="win";
+      this.goalMult=(this.e.u.ran(300)+50)/100
+      this.goalDistance=this.multToDist(this.goalMult);
       this.makeLoser=false;
+
+      console.log("Gd "+this.goalDistance)
+
+      //----------------------------------------------------------------------------
+      //----------------------------------------------------------------------------
+      //----------------------------------------------------------------------------
+
+      // kill props near end
+
+      for(var i=0; i<this.props2.length; i++){
+
+        if( Math.abs( this.props2[i].position.x - this.goalDistance ) < 500){
+
+          this.props2[i].position.x=-1000;
+          this.props2[i].mirror.position.x=-1000;
+
+        }
+
+      }
+
+      // make end props
+
+      this.makeNewProp("red", this.goalDistance, "end red")
+      this.makeNewProp("yellow", this.goalDistance, "end yellow")
+      
+      //----------------------------------------------------------------------------
+      //----------------------------------------------------------------------------
+      //----------------------------------------------------------------------------
+
+      this.finishLine2.position.x=this.goalDistance;
   
-      document.getElementById("betSlider").style.pointerEvents="none";
+      // document.getElementById("betSlider").style.pointerEvents="none";
 
       gsap.killTweensOf(this.pmObject);
       
@@ -909,22 +1097,22 @@ export class Scene {
       this.cowAniAction="start"
       this.cowAniCount=0;
 
-      for(var i=0; i<this.props.length; i++){
-        // console.log(this.props[i].position.x+" / "+this.goalDistance)
-        if(this.props[i].position.x>this.goalDistance){
-          this.props[i].position.x=-200;
-          this.props[i].action="done";
-          this.props[i].alpha=0;
-        }
-      }
+      // for(var i=0; i<this.props.length; i++){
+      //   // console.log(this.props[i].position.x+" / "+this.goalDistance)
+      //   if(this.props[i].position.x>this.goalDistance){
+      //     this.props[i].position.x=-200;
+      //     this.props[i].action="done";
+      //     this.props[i].alpha=0;
+      //   }
+      // }
       
-      for(var i=0; i<this.props2.length; i++){
-        if(this.props2[i].position.x>this.goalDistance){
-          this.props2[i].position.x=-200;
-          this.props2[i].action="done";
-          this.props2[i].alpha=0;
-        }
-      }
+      // for(var i=0; i<this.props2.length; i++){
+      //   if(this.props2[i].position.x>this.goalDistance){
+      //     this.props2[i].position.x=-200;
+      //     this.props2[i].action="done";
+      //     this.props2[i].alpha=0;
+      //   }
+      // }
       
       this.action="shoot"
 
@@ -938,10 +1126,12 @@ export class Scene {
       this.timeObject.time = this.mirrorTime;
       this.timeObject.x = this.playerCont2.position.x;
       this.timeObject.y = this.playerCont2.position.y;
-      this.timeObject.yellowHeight = this.tweenOb.yellowHeight;
+      // this.timeObject.yellowHeight = this.tweenOb.yellowHeight;
       this.timeObject.movePlayer = this.movePlayer;
       this.timeObject.xspeed = this.xspeed;
       this.timeObject.didBounce = this.didBounce;
+
+      this.timeObject.chickenArray = this.chickenArray;
 
       if(this.didBounce===true){
         this.didBounce=false;
@@ -950,6 +1140,19 @@ export class Scene {
       this.saveData.push(this.timeObject);
 
       this.mirrorTime+=this.e.dt;
+
+      // ----------------------------------------------------------------------------------------------------------------
+
+      for(var i=0; i<this.props2.length; i++){
+
+        if(this.props2[i].position.x>this.goalDistance*.8 && this.props2[i].type==="green"){
+
+          this.props2[i].position.x=-1000
+          this.props2[i].mirror.position.x=-1000
+
+        }
+
+      }
 
       // ----------------------------------------------------------------------------------------------------------------
 
@@ -962,9 +1165,19 @@ export class Scene {
         this.playerBody.position.y=-330;
         this.playerBody.rotation = this.e.u.ca(80);
 
-        this.gp = this.cannonBody.getGlobalPosition();
-        this.playerCont2.position.x=this.gp.x;
-        this.playerCont2.position.y=this.gp.y-window.innerHeight;
+        if(this.e.mobile===true){
+
+          this.gp = this.cannonBody.getGlobalPosition();
+          this.playerCont2.position.x=this.gp.x*2;
+          this.playerCont2.position.y=(this.gp.y-window.innerHeight)*2;
+
+        }else{
+
+          this.gp = this.cannonBody.getGlobalPosition();
+          this.playerCont2.position.x=this.gp.x;
+          this.playerCont2.position.y=(this.gp.y-window.innerHeight);
+
+        }
 
         document.getElementById("controlContainer").style.display="none";
 
@@ -1004,9 +1217,19 @@ export class Scene {
           gsap.to( this.cannon2.position, { x: this.cannon2.position.x-20*3, y: this.cannon2.position.y+5*3,  duration: .1, ease: "sine.out"});
           gsap.to( this.cannon2.position, { x: this.cannon2.position.x+20*3, y: this.cannon2.position.y-5*3,  delay: .1, duration: .4, ease: "sine.out"});
 
-          this.gp = this.cannonBody.getGlobalPosition();
-          this.explosion.position.x=this.gp.x;
-          this.explosion.position.y=this.gp.y-window.innerHeight;
+          if(this.e.mobile===true){
+
+            this.gp = this.cannonBody.getGlobalPosition();
+            this.explosion.position.x=this.gp.x*2;
+            this.explosion.position.y=(this.gp.y-window.innerHeight)*2;
+  
+          }else{
+
+            this.gp = this.cannonBody.getGlobalPosition();
+            this.explosion.position.x=this.gp.x;
+            this.explosion.position.y=(this.gp.y-window.innerHeight);
+  
+          }
 
           this.cowAniAction="flying"
       
@@ -1017,6 +1240,8 @@ export class Scene {
       // ----------------------------------------------------------------------------------------------------------------
 
       // set other to position
+
+      this.moveChickens();
 
       if(this.mirrorTime>2){
 
@@ -1044,8 +1269,13 @@ export class Scene {
 
         if(this.closestEntry!==null){
 
-          if(this.closestEntry.didBounce===true && this.hasWon===false){
+          if(this.hitGroundCount>0){
+            this.hitGroundCount-=this.e.dt;
+          }
+
+          if(this.closestEntry.didBounce===true && this.hasWon===false && this.hitGroundCount<=0){
             this.e.s.p("hitGround")
+            this.hitGroundCount=.5;
           }
             
           this.playerCont.position.x = this.closestEntry.x;
@@ -1053,23 +1283,25 @@ export class Scene {
 
           this.playerBody.rotation+= this.closestEntry.xspeed*this.e.dt*.3;
 
-          if(this.closestEntry.movePlayer===true){
-              
-            for(var i=0; i<this.props.length; i++){
+          //------------------------------------
 
-              if(this.props[i].type==="yellow"){
-                this.props[i].position.y = this.closestEntry.yellowHeight;
+          for(var i=0; i<this.props.length; i++){
+
+            if(this.props[i]!==this.endYellow){
+                
+              for(var j=0; j<this.closestEntry.chickenArray.length; j++){
+        
+                if( this.props[i].mirror === this.closestEntry.chickenArray[j][0] ){
+
+                  this.props[i].position.y = this.closestEntry.chickenArray[j][1]
+
+                }
+        
               }
-              
+        
             }
 
-          }else{
-
-            gsap.killTweensOf(this.tweenOb);
-
           }
-          // console.log(this.closestNum+" / "+this.closestEntry.time)
-          // console.log(this.realTime)
 
         }else{
 
@@ -1079,13 +1311,18 @@ export class Scene {
 
       }
 
-      // ----------------------------------------------------------------------------------------------------------------
+      // -----------------------------------------------------------------------------------------------------------
+      // -----------------------------------------------------------------------------------------------------------
+      // -----------------------------------------------------------------------------------------------------------
 
       // score
 
-      this.score = this.playerCont.position.x+200;
+      this.score = this.playerCont.position.x;
+      this.scoreMult = this.e.u.roundToTwoDigits( this.distToMult(this.score) );
 
       if(this.score>this.goalDistance){
+
+        this.score=this.goalDistance
 
         gsap.killTweensOf(this.cowHead);
         gsap.killTweensOf(this.cowBody);
@@ -1095,18 +1332,18 @@ export class Scene {
         gsap.killTweensOf(this.cowLeg2);
 
         if(this.winSoundOnce===true){
+
+          this.hasWon=true;
+
           this.e.s.p("win")
           this.winSoundOnce=false
-              
-          // if(this.hasWon===true){
-            document.getElementById("winText").style.opacity="1"
-          // }
+          document.getElementById("winText").style.opacity="1"
+          document.getElementById("winText").innerHTML = this.goalMult+""
 
         }
-        
-
+          
         // this.action="result"
-        this.hasWon=true;
+        // this.hasWon=true;
 
         this.levCont.position.x = -this.goalDistance+(window.innerWidth/2)+200;
 
@@ -1118,12 +1355,20 @@ export class Scene {
         this.xspeed=this.xspeedMax;
       }
 
+      // if(this.xspeed<8){
+      //   this.xspeed=8;
+      // }
+
       if(this.movePlayer===true){
         this.playerCont2.position.x+=this.xspeed;
         this.playerCont2.position.y+=this.yspeed;
       }
 
-      
+      if(this.playerCont2.position.x>this.goalDistance){
+
+        this.movePlayer=false;
+
+      }
      
       this.yspeed+=this.e.dt*10;
 
@@ -1137,11 +1382,11 @@ export class Scene {
 
       }
 
+      // -----------------------------------------------------------------------------------------------------------
+      // -----------------------------------------------------------------------------------------------------------
+      // -----------------------------------------------------------------------------------------------------------
+
       // rocks
-
-      this.moveRocks();
-
-      this.moveChickens();
 
       // cycle through
 
@@ -1157,8 +1402,9 @@ export class Scene {
             p.flipCount=0;
           }
 
-          p.flipCount+=this.e.dt;
-          if(p.flipCount>2){
+          // p.flipCount+=this.e.dt;
+          // if(p.flipCount>2){
+          if( this.e.u.hitTest(this.player, p.mirror)===true ){
 
             if(p.type==="blue" || p.type==="green"){
               this.e.s.p("exp2")
@@ -1196,7 +1442,6 @@ export class Scene {
               }
 
               p.mirror.alpha = 0;
-              // p.mirror.rotation = this.e.u.ca(180)
 
             }
 
@@ -1208,14 +1453,13 @@ export class Scene {
 
         if( Math.abs( this.playerCont2.position.x - p.position.x )<200 ){
 
-          if(this.e.u.hitTest(this.player2, p)===true && p.action==="wait"){
+          if(this.e.u.hitTest(this.player2, p)===true && p.action==="wait" && p!==this.endRed2 && p!==this.endYellow2 ){
 
             p.action="used";
-            
-            if(p.type==="purple"){
 
-              // console.log("p")
-              // console.log(p)
+            console.log(p.type)
+
+            if(p.type==="purple"){
 
               this.xspeed+=p.xspeed;
               if(this.yspeed>0){
@@ -1227,9 +1471,6 @@ export class Scene {
 
             }else if(p.type==="blue"){
 
-              // console.log("b")
-              // console.log(p)
-
               this.xspeed+=p.xspeed;
               if(this.yspeed>0){
                 this.yspeed=0;
@@ -1239,9 +1480,6 @@ export class Scene {
               p.alpha=0;
 
             }else if(p.type==="green"){
-
-              console.log("g")
-              // console.log(p)
 
               this.xspeed+=p.xspeed;
               if(this.yspeed>0){
@@ -1288,6 +1526,7 @@ export class Scene {
 
                 p.alpha=0;
                 p.mirror.alpha=0;
+                // p.mirror.texture = this.e.ui.t_yellow
                 p.action="done"
 
               }else{
@@ -1312,89 +1551,57 @@ export class Scene {
 
       // ----------------------------------------------------------------------------------------------------------------
 
-      // if a lose and getting too far
+      // if you are past the near end
 
-      if( this.winResult==="lose" ){
+      this.nearEnd = this.goalDistance-5000;
 
-        if(this.makeKillerCount>0){
+      if(this.playerCont2.position.x > this.nearEnd){
 
-          this.makeKillerCount-=this.e.dt;
+        this.playerCont2.alpha=.5;
 
+        if(this.yspeed<-7){
+          this.yspeed=-7
         }
 
-        if(this.playerCont2.position.x>this.goalDistance*.7 && this.makeKillerCount<=0){
+      }
 
-          if(this.playerCont2.position.y>-180){
+      if(this.playerCont2.position.x>this.goalDistance){
 
-            console.log("MAKE KILLER")
+        if(this.e.u.hitTest(this.player2, this.endRed2)===true ){
 
-            this.makeNewProp("red", this.playerCont2.position.x, "killer")
+          //has ended and hit the barbed wire
 
-            for(var i=0; i<this.props.length; i++){
+          // console.log("HIT END WIRE!")
 
-              if(this.props[i]!==this.killerProp && this.props2[i]!==this.killerProp){
-                  
-                if( Math.abs( this.killerProp.position.x - this.props[i].position.x )<40 ){
+          this.endYellow.position.x=-1000;
+          this.endYellow2.position.x=-1000;
 
-                  this.props[i].alpha=0;
-                  this.props[i].mirror.alpha=0;
-                  console.log("extra red kill")
+        }else{
 
-                }
+          // console.log("NO WIRE!")
 
-              }
+          this.endRed.position.x=-1000;
+          this.endRed2.position.x=-1000;
 
+          if(this.mirrorEndYellow===true){
+
+            this.endYellow2.position.y=this.playerCont2.position.y
+            if(this.playerCont2.position.y>-500){
+              this.endYellow.position.y=-900
+            }else{
+              this.endYellow.position.y=-200
             }
-
-            this.makeKillerCount=21;
+            
+  
+            gsap.to( this.endYellow.position, { y: this.endYellow2.position.y,  duration: .8, delay: 1.2, ease: "linear"});
+  
+            this.mirrorEndYellow=false;
 
           }
 
         }
 
-      }
-
-      // if a lose convert all later props to bad if over 80% of the way
-
-      if(this.makeLoser===true){
-
-        if(this.playerCont2.position.x>this.goalDistance*.6){
-
-          this.winResult="lose"
-
-        }
-
-      }
-
-      if(this.convertToLossOnce===true && this.winResult==="lose" || this.convertToLossOnce===true && this.makeLoser===true){
-
-        this.convertToLossOnce=false;
-
-        for(var i=0; i<this.props2.length; i++){
-
-          var p = this.props2[i];
-
-          this.makeSomeGoodRan = this.e.u.ran(4);
-
-          if(p.position.x>this.goalDistance*.6 && this.makeSomeGoodRan!==0){
-
-            if(p.type==="blue"){
-
-              p.type="red";
-              p.texture=this.e.ui.t_barbedWire;
-              p.mirror.texture=this.e.ui.t_barbedWire;
-
-            }else if(p.type==="purple"){
-
-              p.type="yellow";
-              p.texture=this.e.ui.t_chicken;
-              p.mirror.texture=this.e.ui.t_chicken;
-
-            }
-
-          }
-
-        }
+        // console.log( Math.round(this.endYellow.position.y) + " / " + Math.round(this.endYellow2.position.y) )
 
       }
 
@@ -1407,13 +1614,40 @@ export class Scene {
         if(this.createBlockCount>0){
           this.createBlockCount-=this.e.dt;
         }
+
+        if(this.xspeed<3){
+          this.xspeed=3;
+        }
         
         if(this.xspeed<5 && this.playerCont2.position.y>-180 && this.createBlockCount<=0){
 
-          console.log("MAKE NEW PROP")
+          console.log("try new")
 
-          this.createBlockCount=1.5;
-          this.makeNewProp("purple", this.playerCont2.position.x+25, "win")
+          if(this.playerCont2.position.x < this.goalDistance-400){
+
+            console.log("MAKE NEW PROP")
+
+            for(var i=0; i<this.props.length; i++){
+
+              this.pDist = Math.abs(this.props[i].position.x - (this.playerCont2.position.x+25));
+              if(this.pDist<200){
+
+                // if( this.props[i].type==="green" || this.props[i].type==="blue" || this.props[i].type==="red"){
+
+                  this.props[i].position.x=-1000;
+                  this.props2[i].position.x=-1000;
+  
+                // }
+
+              }
+
+            }
+
+            this.createBlockCount=1.5;
+            this.makeNewProp("purple", this.playerCont2.position.x+25, "win")
+
+  
+          }
 
         }
 
@@ -1421,10 +1655,11 @@ export class Scene {
 
       // check for being stopped
 
-      if(this.xspeed<.001 || this.hasWon===true){
+      // if(this.xspeed<.001 || this.hasWon===true){
+      if(this.hasWon===true){
 
-        this.endTime+=this.e.dt;
-        if(this.endTime>2.2){
+        // this.endTime+=this.e.dt;
+        // if(this.endTime>2.2){
 
           gsap.killTweensOf(this.cowHead);
           gsap.killTweensOf(this.cowBody);
@@ -1433,33 +1668,96 @@ export class Scene {
           gsap.killTweensOf(this.cowLeg1);
           gsap.killTweensOf(this.cowLeg2);
 
-          if(this.hasWon===false){
-            // this.e.s.p("moo")
-          }
-
           this.action="result"
 
-        }
+        // }
 
-      }
-
-      if(this.score>this.goalDistance){
-        this.score=this.goalDistance
       }
 
     }else if(this.action==="result"){
 
-      this.moveChickens();
-      this.moveRocks();
+      // this.moveChickens();
+      // this.moveRocks();
 
-      this.resetButton.alpha=1;
-      this.resetButton.interactive=true;
-      this.resetButton.buttonMode=true;
+      this.action="angel1"
 
+    }else if(this.action==="angel1"){
+
+      // this.e.s.p("ghostPop")
+
+      this.playerAngel.myAlpha=1;
+
+      this.playerAngel.position.x = this.playerCont.position.x;
+      this.playerAngel.position.y = this.playerCont.position.y;
+      this.playerAngel.alpha = 1;
+
+      gsap.to( this.playerAngel.position, { y: this.playerAngel.position.y-170,  duration: .25});
+      gsap.to( this.playerAngel.position, { y: this.playerAngel.position.y-1000,  duration: 2, delay: 1.5});
+      gsap.to( this.playerAngel, { myAlpha: 0,  duration: 2, delay: 1.5});
+
+      this.blinkCount=0;
+      this.count=0;
+
+      this.action="angel2"
+
+    }else if(this.action==="angel2"){
+
+      this.angelBlink();
+
+      this.count+=this.e.dt;
+      if(this.count>1.5){
+
+        this.resetButton.alpha=1;
+        this.resetButton.interactive=true;
+        this.resetButton.buttonMode=true;
+  
+        // this.action="angel3"
+
+      }
+
+    // }else if(this.action==="angel3"){
+
+    //   this.angelBlink();
+  
+    //   this.count+=this.e.dt;
+    //   if(this.count>2){
+
+    //     this.action="angel4"
+
+    //   }
     }
 
     this.winColor();
 
+    this.moveRocks();
+
+  }
+
+  angelBlink(){
+
+    this.blinkCount+=this.e.dt;
+    if(this.blinkCount>.02){
+
+      this.blinkCount=0;
+
+      if(this.angelAlpha===0){
+        this.angelAlpha=.4;
+      }else{
+        this.angelAlpha=0;
+      }
+
+    }
+
+    this.playerAngel.alpha = this.playerAngel.myAlpha - this.angelAlpha;
+    
+  }
+
+  distToMult(dist){
+    return dist/10000;
+  }
+
+  multToDist(mult){
+    return mult*10000;
   }
 
   winColor(){
@@ -1517,18 +1815,66 @@ export class Scene {
 
   moveChickens(){
 
+    this.trackMe = true;
+
+    this.chickenArray = [];
+
     for(var i=0; i<this.props2.length; i++){
 
       var p = this.props2[i]
 
       if(p.type==="yellow"){
 
-        p.position.y = this.tweenOb.yellowHeight;
-        p.mirror.position.y = this.tweenOb.yellowHeight;
+        if(p.position.y>-150){
+                  
+          p.dir="up"
+
+        }else if(p.position.y<-900){
+
+          p.dir="down"
+
+        }
+
+        //-----------------------------------------------------
+
+        if(this.trackMe===true){
+          this.trackMe=false;
+        }
+
+        //-----------------------------------------------------
+
+        if(p===this.endYellow2 && this.mirrorEndYellow===false){
+
+          // console.log("dont mirror")
+          // don't move the mirror
+
+        }else{
+
+          if(p.dir==="up"){
+
+            p.position.y-=this.e.dt*p.moveSpeed;
+
+          }else{
+
+            p.position.y+=this.e.dt*p.moveSpeed;
+
+          }
+
+          // p.mirror.position.y = p.position.y;
+
+        }
+
+        this.pArray = []
+        this.pArray.push(p);
+        this.pArray.push(p.position.y);
+
+        this.chickenArray.push(this.pArray);
 
       }
 
     }
+
+    
 
   }
 

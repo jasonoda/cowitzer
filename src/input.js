@@ -16,6 +16,8 @@ export class Input {
 
             if (event.key === "ArrowRight" || event.key === "d" || event.key === "D") {
 
+                console.log("a")
+                this.e.scene.moveMode = true;
                 this.keyRight = true;
 
             } else if (event.key === "ArrowLeft" || event.key === "a" || event.key === "A") {
@@ -58,11 +60,21 @@ export class Input {
 
                 this.e.scene.levCont.alpha=0;
                 this.e.scene.levCont2.alpha=1;
+                this.e.scene.backgroundCont.alpha=0;
 
             } else if (event.key === "2") {
 
                 this.e.scene.levCont.alpha=1;
-                this.e.scene.levCont2.alpha=.4;
+                this.e.scene.levCont2.alpha=0;
+                this.e.scene.backgroundCont.alpha=1;
+
+            } else if (event.key === "3") {
+
+                this.e.scene.backgroundCont.alpha=0;
+
+            } else if (event.key === "4") {
+
+                this.e.scene.action="angel1";
 
             } else if (event.key === " ") {
 

@@ -74,6 +74,7 @@ export class UI {
         this.loader.add('cannon2', './src/img/cannon2.png');
         this.loader.add('cannon3', './src/img/cannon3.png');
         this.loader.add('cannonBody', './src/img/cannonBody.png');
+        this.loader.add('cowAngel', './src/img/cowAngel.png');
 
         this.loader.add('mine', './src/img/mine.png');
         this.loader.add('grenade', './src/img/grenade.png');
@@ -144,6 +145,7 @@ export class UI {
             this.t_cannon2=resources.cannon2.texture;
             this.t_cannon3=resources.cannon3.texture;
             this.t_cannonBody=resources.cannonBody.texture;
+            this.t_cowAngel=resources.cowAngel.texture;
 
             this.t_mine=resources.mine.texture;
             this.t_grenade=resources.grenade.texture;
