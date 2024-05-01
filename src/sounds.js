@@ -1,3 +1,4 @@
+import { Howl } from 'howler';
 export class Sounds {
 
     setUp(e) {

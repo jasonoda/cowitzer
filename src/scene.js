@@ -1,4 +1,4 @@
-import { gsap } from "./greensock/all.js";
+import { gsap } from "gsap";
 
 export class Scene {
     
