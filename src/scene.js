@@ -39,6 +39,23 @@ export class Scene {
 
     this.endPoint=.67;
 
+    
+    document.getElementById("launchBut").addEventListener('click', (event) => {
+      
+      if(this.action==="wait to shoot"){
+        this.action="set shoot";
+      }
+
+    });
+
+    document.getElementById("launchBut").addEventListener('touchstart', (event) => {
+      
+      if(this.action==="wait to shoot"){
+        this.action="set shoot";
+      }
+
+    });
+
     window.addEventListener('click', (event) => {
       
       if(this.action==="wait to shoot"){
@@ -957,6 +974,9 @@ export class Scene {
 
       document.getElementById("controlContainer").style.display="inline";
 
+      document.getElementById("launchBut").style.opacity="1";
+      document.getElementById("launchBut").style.pointerEvents="auto";
+
       this.cowHead.rotation=0;
       this.cowArm1.rotation=0;
       this.cowArm2.rotation=0;
@@ -1022,11 +1042,11 @@ export class Scene {
 
     }else if(this.action==="wait to shoot"){
 
-      if(this.e.input.keySpace===true){
+      // if(this.e.input.keySpace===true){
 
-        this.action="set shoot"
+      //   this.action="set shoot"
 
-      }
+      // }
 
     }else if(this.action==="set shoot"){
 
@@ -1044,6 +1064,9 @@ export class Scene {
       this.makeLoser=false;
 
       console.log("Gd "+this.goalDistance)
+
+      document.getElementById("launchBut").style.opacity="0";
+      document.getElementById("launchBut").style.pointerEvents="none";
 
       //----------------------------------------------------------------------------
       //----------------------------------------------------------------------------

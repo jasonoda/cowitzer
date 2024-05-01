@@ -28,7 +28,7 @@ export class Sounds {
 
     p(type){
 
-        if(this.e.mobile===false){
+        // if(this.e.mobile===false){
             for(var i=0; i<this.loadedSounds.length; i++){
 
                 // console.log(type+" / "+this.loadedSounds[i].name)
@@ -39,7 +39,7 @@ export class Sounds {
                 }
                 
             }
-        }
+        // }
 
     }
 }

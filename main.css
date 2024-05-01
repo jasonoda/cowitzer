@@ -50,6 +50,36 @@ body{
     font-size: 0pt;
 }
 
+#launchBut{
+
+  display: inline-flex;
+  position: fixed;
+  color: #ffffff;
+  font-family: "Gotham";
+  bottom: 3vh;
+  width: 200px;
+  height: 35px;
+  font-size: 18pt;
+  left: 0;
+  right: 0;
+  margin:auto;
+  z-index: 110;
+  background-color: #cd4f32;
+  border-radius: 5px;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  /* vertical-align: middle; */
+  /* max-height: 30px; */
+
+}
+
+#launchBut span {
+  display: inline-block;
+  vertical-align: middle;
+  /* line-height: normal; */
+}
+
 #loadingImage{
     position: fixed;
     width: 237px;
